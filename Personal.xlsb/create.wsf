@@ -1,0 +1,31 @@
+<job>
+<script language="VBScript" src="../VBS-MS-Office-App-Creator/create-MS-Office-app.vbs" />
+<script language="VBScript">
+
+   option explicit
+
+   dim wsh
+   set wsh = createObject("WScript.Shell")
+
+   dim path
+   path = wsh.environment("volatile")("appdata") & "\Microsoft\Excel\XLSTART\Personal.xlsb"
+
+   wscript.echo "Path of Excel template fie is: " & path
+
+   dim app
+   dim xls
+   set xls = createOfficeApp("excel", path)
+   set app = xls.application
+
+   insertModule              app, currentDir() & "functionality.vb", "functionality", 1
+   insertModule              app, currentDir() & "WinAPI.vb"       , "WinAPI"       , 1
+   replaceThisWorkbookModule app, currentDir() & "thisWorkbook.vb"
+
+   app.VBE.activeVBProject.name = "Personal_xlsb"
+
+   app.activeWindow.visible = false
+
+   xls.save
+   app.quit
+
+</script> </job>
