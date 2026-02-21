@@ -8,13 +8,18 @@
    set wsh = createObject("WScript.Shell")
 
    dim path
-   path = wsh.environment("volatile")("appdata") & "\Microsoft\Excel\XLSTART\Personal.xlsb"
+   path = wsh.environment("volatile")("appdata") & "\Microsoft\Excel\XLSTART"
+   wscript.echo "Path for Excel template fie is: " & path
 
-   wscript.echo "Path of Excel template fie is: " & path
+   set fso = createObject("Scripting.FileSystemObject")
+   if not fso.FolderExists(path) then
+      wscript.echo "  Creating directory for this path"
+      fso.CreateFolder path
+   end if
 
    dim app
    dim xls
-   set xls = createOfficeApp("excel", path)
+   set xls = createOfficeApp("excel", path + "\Personal.xlsb")
    set app = xls.application
 
    insertModule              app, currentDir() & "functionality.vb", "functionality", 1
